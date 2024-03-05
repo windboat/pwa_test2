@@ -41,7 +41,8 @@
 <body>
   <!-- Our app-index web component. This component is defined in src/pages/app-index.ts-->
   <p>test...</p>
-  <p id="p"></p>
+  <p id="p1"></p>
+  <p id="p2"></p>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register(
@@ -49,10 +50,36 @@
       );
     }
 
-    document.write("<br>protocol=" + window.location.protocol);
-    document.write("<br>host=" + window.location.host);
-    document.write("<br>pathname=" + window.location.pathname);
-    document.write("<br>params=" + window.location.search);
+    var port = 'undefined';
+    function handleMessage(event) {
+      // We are receiveing messages from any origin, you can check of the origin by
+      // using event.origin
+    
+      console.log("event.origin=" + event.origin);
+      console.log("event port size=" + event.ports.length);
+      // get the port then use it for communication;
+      var port = event.ports[0];
+      console.log("port=" + port);
+      document.getElementById('p2').innerText="event.origin=" + event.origin + "\n" 
+      + "event port size=" + event.ports.length + "\n"
+      + "port=" + port;
+      if (typeof port === 'undefined') return;
+    
+      // Post message on this port.
+      port.postMessage("Test")
+    
+      // Receive upcoming messages on this port.
+      port.onmessage = function(event) {
+        console.log("[PostMessage1] Got message" + event.data);
+      };
+  }
+  window.addEventListener("message", handleMessage);
+  // window.postMessage("test");
+
+  document.getElementById('p1').innerText="protocol=" + window.location.protocol
+   + "\nhost=" + window.location.host
+   + "\npathname=" + window.location.pathname
+   + "\nparams=" + window.location.search;
 
   </script>
 </body>

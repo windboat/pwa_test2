@@ -75,6 +75,7 @@
       port.onmessage = function(event) {
         console.log("[PostMessage1] Got message" + event.data);
         document.getElementById('p3').innerText=event.data
+        port.postMessage("ACK");
       };
   }
 

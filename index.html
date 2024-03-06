@@ -41,8 +41,11 @@
 <body>
   <!-- Our app-index web component. This component is defined in src/pages/app-index.ts-->
   <p>test...</p>
-  <p id="p1"></p>
-  <p id="p2"></p>
+  <p id="p1">web base info:</p>
+  <p id="p2">web message port:</p>
+  <p id="p3">received message:</p>
+  <input id="input_message" type="text" placeholder="input message" width="100%"></input>
+  <button id="btn_send" onclick="sendMessage()">Send message to app</button>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register(
@@ -50,7 +53,7 @@
       );
     }
 
-    var port = 'undefined';
+    var port;
     function handleMessage(event) {
       // We are receiveing messages from any origin, you can check of the origin by
       // using event.origin
@@ -66,13 +69,27 @@
       if (typeof port === 'undefined') return;
     
       // Post message on this port.
-      port.postMessage("Test")
+      port.postMessage("Test message from web")
     
       // Receive upcoming messages on this port.
       port.onmessage = function(event) {
         console.log("[PostMessage1] Got message" + event.data);
+        document.getElementById('p3').innerText=event.data
       };
   }
+
+  function sendMessage() {
+    let inputText = document.getElementById("input_message").value;
+    console.log("sendMessage: inputText=" + inputText);
+    if (typeof port === 'undefined') {
+      console.log("port is undefined, cannot send message");
+      alert("port is undefined, cannot send message");
+      return;
+    } 
+    // Post message on this port.
+    port.postMessage(inputText);
+  }
+
   window.addEventListener("message", handleMessage);
   // window.postMessage("test");
 
@@ -83,5 +100,10 @@
 
   </script>
 </body>
-
+<style>
+  input {
+      width: 100%;
+      box-sizing: border-box;
+  }
+</style>
 </html>

@@ -61,7 +61,7 @@
       console.log("event.origin=" + event.origin);
       console.log("event port size=" + event.ports.length);
       // get the port then use it for communication;
-      var port = event.ports[0];
+      port = event.ports[0];
       console.log("port=" + port);
       document.getElementById('p2').innerText="event.origin=" + event.origin + "\n" 
       + "event port size=" + event.ports.length + "\n"
